@@ -1,0 +1,646 @@
+/* ============================================================
+   DESIGN SYSTEM — Gold Investment App
+   Modern fintech aesthetic inspired by Argent/Wise
+   ============================================================ */
+
+/* ----------------------------------------------------------
+   1. DESIGN TOKENS
+   ---------------------------------------------------------- */
+:root {
+    /* Colors */
+    --color-bg:             #F9F9F9;
+    --color-surface:        #FFFFFF;
+    --color-text-primary:   #111111;
+    --color-text-secondary: #636366;
+    --color-text-tertiary:  #8E8E93;
+    --color-primary:        #E8732A;
+    --color-primary-hover:  #D4631E;
+    --color-success:        #30B98A;
+    --color-error:          #FF3B30;
+    --color-border:         #E5E5EA;
+    --color-border-light:   #F0F0F5;
+
+    /* Typography */
+    --font-family:  'Barlow', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-xs:      0.8125rem;  /* 13px */
+    --font-sm:      0.875rem;   /* 14px */
+    --font-base:    1rem;       /* 16px */
+    --font-md:      1.125rem;   /* 18px */
+    --font-lg:      1.375rem;   /* 22px */
+    --font-xl:      1.625rem;   /* 26px */
+    --font-2xl:     2.125rem;   /* 34px */
+    --font-3xl:     2.625rem;   /* 42px */
+    --fw-regular:   400;
+    --fw-medium:    500;
+    --fw-semibold:  600;
+    --fw-bold:      700;
+
+    /* Spacing */
+    --space-xs:   4px;
+    --space-sm:   8px;
+    --space-md:   12px;
+    --space-lg:   16px;
+    --space-xl:   20px;
+    --space-2xl:  24px;
+    --space-3xl:  32px;
+
+    /* Radii */
+    --radius-sm:    8px;
+    --radius-md:    12px;
+    --radius-lg:    16px;
+    --radius-xl:    24px;
+    --radius-full:  9999px;
+
+    /* Shadows */
+    --shadow-card:          0 1px 3px rgba(0, 0, 0, 0.06);
+    --shadow-sheet:         0 -4px 20px rgba(0, 0, 0, 0.08);
+    --shadow-notification:  0 4px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* ----------------------------------------------------------
+   2. RESET & BASE
+   ---------------------------------------------------------- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    font-size: var(--font-base);
+    font-weight: var(--fw-regular);
+    color: var(--color-text-primary);
+    background-color: var(--color-bg);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ----------------------------------------------------------
+   3. TYPOGRAPHY
+   ---------------------------------------------------------- */
+h1, h2, h3, h4 {
+    font-weight: var(--fw-semibold);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+}
+
+h1 { font-size: var(--font-2xl); }
+h2 { font-size: var(--font-xl); }
+h3 { font-size: var(--font-lg); }
+h4 { font-size: var(--font-md); }
+
+.text-xs      { font-size: var(--font-xs); }
+.text-sm      { font-size: var(--font-sm); }
+.text-base    { font-size: var(--font-base); }
+.text-md      { font-size: var(--font-md); }
+.text-lg      { font-size: var(--font-lg); }
+.text-xl      { font-size: var(--font-xl); }
+.text-2xl     { font-size: var(--font-2xl); }
+.text-3xl     { font-size: var(--font-3xl); }
+.text-bold    { font-weight: var(--fw-bold); }
+.text-semi    { font-weight: var(--fw-semibold); }
+.text-medium  { font-weight: var(--fw-medium); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-tertiary  { color: var(--color-text-tertiary); }
+.text-center  { text-align: center; }
+
+/* ----------------------------------------------------------
+   4. LAYOUT UTILITIES
+   ---------------------------------------------------------- */
+.flex          { display: flex; }
+.flex-col      { flex-direction: column; }
+.flex-center   { display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.items-center  { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-xs  { gap: var(--space-xs); }
+.gap-sm  { gap: var(--space-sm); }
+.gap-md  { gap: var(--space-md); }
+.gap-lg  { gap: var(--space-lg); }
+.gap-xl  { gap: var(--space-xl); }
+.mt-sm   { margin-top: var(--space-sm); }
+.mt-md   { margin-top: var(--space-md); }
+.mt-lg   { margin-top: var(--space-lg); }
+.mt-xl   { margin-top: var(--space-xl); }
+.mt-2xl  { margin-top: var(--space-2xl); }
+.mt-3xl  { margin-top: var(--space-3xl); }
+.mb-sm   { margin-bottom: var(--space-sm); }
+.mb-md   { margin-bottom: var(--space-md); }
+.mb-lg   { margin-bottom: var(--space-lg); }
+.mb-xl   { margin-bottom: var(--space-xl); }
+
+.hidden { display: none !important; }
+
+/* ----------------------------------------------------------
+   5. BUTTONS
+   ---------------------------------------------------------- */
+
+/* Primary CTA — full-width orange pill */
+.btn-primary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    padding: 0 var(--space-2xl);
+    font-family: var(--font-family);
+    font-size: var(--font-md);
+    font-weight: var(--fw-semibold);
+    color: var(--color-surface);
+    background: var(--color-primary);
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.btn-primary:active {
+    background: var(--color-primary-hover);
+    transform: scale(0.98);
+}
+
+/* Secondary — outlined / ghost */
+.btn-secondary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    padding: 0 var(--space-2xl);
+    font-family: var(--font-family);
+    font-size: var(--font-md);
+    font-weight: var(--fw-semibold);
+    color: var(--color-primary);
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.btn-secondary:active {
+    background: var(--color-border-light);
+    transform: scale(0.98);
+}
+
+/* Small / chip — pill outline (MIN, 50%, MAX) */
+.btn-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-sm) var(--space-lg);
+    font-family: var(--font-family);
+    font-size: var(--font-sm);
+    font-weight: var(--fw-medium);
+    color: var(--color-text-primary);
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.btn-chip:active,
+.btn-chip.active {
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+}
+
+/* Icon button — back arrow, close */
+.btn-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    font-size: var(--font-lg);
+    color: var(--color-text-primary);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: background 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.btn-icon:active {
+    background: var(--color-border-light);
+}
+
+/* ----------------------------------------------------------
+   6. CARDS & SURFACES
+   ---------------------------------------------------------- */
+.card {
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-md);
+    box-shadow: var(--shadow-card);
+    transition: transform 0.1s ease;
+    cursor: pointer;
+}
+.card:active {
+    transform: scale(0.99);
+}
+.card.disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+.card.disabled:active {
+    transform: none;
+}
+
+.surface {
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-card);
+}
+
+/* ----------------------------------------------------------
+   7. INPUTS
+   ---------------------------------------------------------- */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="password"],
+textarea {
+    width: 100%;
+    padding: var(--space-lg);
+    font-family: var(--font-family);
+    font-size: var(--font-base);
+    color: var(--color-text-primary);
+    background: var(--color-surface);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+input:focus,
+textarea:focus {
+    border-color: var(--color-primary);
+}
+input::placeholder,
+textarea::placeholder {
+    color: var(--color-text-tertiary);
+}
+
+/* ----------------------------------------------------------
+   8. HEADER BAR
+   ---------------------------------------------------------- */
+.screen-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-lg) 0;
+    margin-bottom: var(--space-lg);
+}
+.screen-header h2 {
+    flex: 1;
+    text-align: center;
+    font-size: var(--font-md);
+    font-weight: var(--fw-semibold);
+}
+.screen-header .btn-icon:first-child {
+    margin-right: auto;
+}
+.screen-header .btn-icon:last-child {
+    margin-left: auto;
+}
+/* Spacer to keep title centered when only one icon */
+.screen-header .header-spacer {
+    width: 36px;
+    height: 36px;
+}
+
+/* ----------------------------------------------------------
+   9. BOTTOM TAB BAR
+   ---------------------------------------------------------- */
+.tab-bar {
+    display: flex;
+    flex-shrink: 0;
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+}
+.tab-bar .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: var(--space-sm) var(--space-xs) var(--space-md);
+    font-family: var(--font-family);
+    font-size: var(--font-xs);
+    font-weight: var(--fw-medium);
+    color: var(--color-text-tertiary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: color 0.15s ease;
+    -webkit-tap-highlight-color: transparent;
+}
+.tab-bar .nav-item .nav-icon {
+    width: 24px;
+    height: 24px;
+}
+.tab-bar .nav-item .nav-label {
+    line-height: 1.2;
+}
+.tab-bar .nav-item.active {
+    color: var(--color-primary);
+}
+.tab-bar .nav-item:active:not(.active) {
+    color: var(--color-text-secondary);
+}
+
+/* ----------------------------------------------------------
+   10. LIST ITEMS
+   ---------------------------------------------------------- */
+.list-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-lg) 0;
+    border-bottom: 1px solid var(--color-border-light);
+}
+.list-item:last-child {
+    border-bottom: none;
+}
+.list-item-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+.list-item-right {
+    text-align: right;
+    font-weight: var(--fw-semibold);
+}
+
+/* ----------------------------------------------------------
+   11. AVATARS & ICONS
+   ---------------------------------------------------------- */
+.avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    background: var(--color-border-light);
+}
+.avatar-bordered {
+    border: 1.5px solid var(--color-border);
+    background: var(--color-surface);
+}
+
+/* Success icon — teal circle with checkmark */
+.icon-success {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-full);
+    border: 3px solid var(--color-success);
+    color: var(--color-success);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    margin: 0 auto var(--space-xl);
+}
+
+/* Error icon */
+.icon-error {
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-full);
+    border: 3px solid var(--color-error);
+    color: var(--color-error);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+}
+
+/* ----------------------------------------------------------
+   12. BADGES
+   ---------------------------------------------------------- */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-xs);
+    font-weight: var(--fw-medium);
+    color: var(--color-text-secondary);
+    background: var(--color-border-light);
+    border-radius: var(--radius-sm);
+}
+.badge-primary {
+    color: var(--color-primary);
+    background: rgba(232, 115, 42, 0.1);
+}
+
+/* ----------------------------------------------------------
+   13. SUMMARY BOX
+   ---------------------------------------------------------- */
+.summary-box {
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    box-shadow: var(--shadow-card);
+}
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md) 0;
+}
+.summary-row + .summary-row {
+    border-top: 1px solid var(--color-border-light);
+}
+.summary-row span {
+    color: var(--color-text-secondary);
+    font-size: var(--font-base);
+}
+.summary-row strong {
+    font-weight: var(--fw-semibold);
+    font-size: var(--font-base);
+}
+
+/* ----------------------------------------------------------
+   14. INFO BOX
+   ---------------------------------------------------------- */
+.info-box {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background: var(--color-border-light);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+}
+.info-box .icon {
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+.info-box p {
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+}
+
+/* ----------------------------------------------------------
+   15. PUSH NOTIFICATION
+   ---------------------------------------------------------- */
+.push-notification {
+    position: absolute;
+    top: var(--space-xl);
+    left: var(--space-lg);
+    right: var(--space-lg);
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-notification);
+    padding: var(--space-lg);
+    z-index: 1000;
+    cursor: pointer;
+    animation: push-slide-down 0.3s ease;
+}
+.push-notification .push-header {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--font-xs);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-sm);
+}
+.push-notification .push-header strong {
+    color: var(--color-text-primary);
+}
+.push-notification .push-body {
+    font-size: var(--font-sm);
+    font-weight: var(--fw-medium);
+    line-height: 1.4;
+    color: var(--color-text-primary);
+}
+
+/* ----------------------------------------------------------
+   16. ANIMATIONS
+   ---------------------------------------------------------- */
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes push-slide-down {
+    from { transform: translateY(-40px); opacity: 0; }
+    to   { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+.animate-fade-in {
+    animation: fade-in 0.25s ease;
+}
+
+.spinner {
+    animation: spin 1.5s linear infinite;
+}
+
+/* Button inline spinner */
+.btn-spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2.5px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: var(--space-sm);
+}
+
+.btn-primary:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* ----------------------------------------------------------
+   17. PHONE CONTAINER (prototype shell)
+   ---------------------------------------------------------- */
+.phone-container {
+    width: 375px;
+    height: 812px;
+    background: var(--color-bg);
+    border-radius: 40px;
+    margin-top: var(--space-xl);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.12);
+    border: 1px solid var(--color-border);
+}
+
+.status-bar {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--space-lg) var(--space-xl);
+    font-size: var(--font-xs);
+    font-weight: var(--fw-semibold);
+    background: var(--color-bg);
+}
+
+/* ----------------------------------------------------------
+   18. SCREEN BASE
+   ---------------------------------------------------------- */
+.screen {
+    display: none;
+    padding: var(--space-xl);
+    animation: fade-in 0.25s ease;
+    height: 100%;
+}
+.screen.active {
+    display: block;
+}
+
+/* ----------------------------------------------------------
+   19. ACTION BAR (sticky bottom)
+   ---------------------------------------------------------- */
+.action-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--space-xl);
+    background: var(--color-bg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+/* ----------------------------------------------------------
+   20. PRICE NOTE / DETAIL ROW
+   ---------------------------------------------------------- */
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md) var(--space-lg);
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-sm);
+}
+.detail-row span {
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
+}
+.detail-row strong {
+    font-size: var(--font-sm);
+    font-weight: var(--fw-semibold);
+}

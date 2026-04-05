@@ -15,10 +15,10 @@ const state = {
 
 const TAB_SCREENS = {
     cash: 'screen-cash',
-    investments: 'screen-list',
+    invest: 'screen-list',
     borrow: 'screen-borrow',
-    rewards: 'screen-rewards',
-    activities: 'screen-activities'
+    activities: 'screen-activities',
+    browser: 'screen-browser'
 };
 
 const INVESTMENT_SCREENS = new Set([
@@ -52,7 +52,7 @@ function navTo(screenId) {
     document.getElementById(screenId).classList.add('active');
 
     if (INVESTMENT_SCREENS.has(screenId)) {
-        setTabNavActive('investments');
+        setTabNavActive('invest');
     }
 
     document.getElementById('push-notification').classList.add('hidden');
@@ -153,16 +153,25 @@ function submitAmount() {
 }
 
 function confirmOrder() {
-    const order = {
-        id: ++state.orderSeq,
-        totalUsdc: state.usdcAmount,
-        goldAmount: state.goldAmount
-    };
-    state.pendingOrder = order;
-    renderGoldActivityFeed();
+    const btn = document.getElementById('btn-confirm');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="btn-spinner"></span>Processing...';
 
-    navTo('screen-confirmed');
-    startSettlementSimulation();
+    setTimeout(() => {
+        const order = {
+            id: ++state.orderSeq,
+            totalUsdc: state.usdcAmount,
+            goldAmount: state.goldAmount
+        };
+        state.pendingOrder = order;
+        renderGoldActivityFeed();
+
+        btn.disabled = false;
+        btn.textContent = 'Confirm Purchase';
+
+        navTo('screen-confirmed');
+        startSettlementSimulation();
+    }, 1500);
 }
 
 function resetApp() {
@@ -260,3 +269,95 @@ document.getElementById('buy-amount').addEventListener('input', function () {
 
 navToTab('cash');
 renderGoldActivityFeed();
+drawGoldChart();
+
+function drawGoldChart() {
+    const canvas = document.getElementById('gold-chart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width;
+    const h = canvas.height;
+
+    // Simulated gold price data (6 months trend, upward)
+    const data = [
+        2280, 2310, 2295, 2330, 2320, 2355, 2340, 2370, 2360, 2385,
+        2375, 2390, 2410, 2395, 2420, 2405, 2430, 2415, 2440, 2425,
+        2450, 2435, 2460, 2445, 2470, 2455, 2480, 2465, 2490, 2450
+    ];
+
+    const min = Math.min(...data) - 20;
+    const max = Math.max(...data) + 20;
+    const padTop = 20;
+    const padBottom = 30;
+    const padLeft = 10;
+    const padRight = 10;
+    const chartW = w - padLeft - padRight;
+    const chartH = h - padTop - padBottom;
+
+    const toX = (i) => padLeft + (i / (data.length - 1)) * chartW;
+    const toY = (v) => padTop + chartH - ((v - min) / (max - min)) * chartH;
+
+    // Clear
+    ctx.clearRect(0, 0, w, h);
+
+    // Grid lines
+    ctx.strokeStyle = '#E5E5EA';
+    ctx.lineWidth = 0.5;
+    for (let i = 0; i <= 4; i++) {
+        const y = padTop + (chartH / 4) * i;
+        ctx.beginPath();
+        ctx.moveTo(padLeft, y);
+        ctx.lineTo(w - padRight, y);
+        ctx.stroke();
+    }
+
+    // Gradient fill
+    const grad = ctx.createLinearGradient(0, padTop, 0, h - padBottom);
+    grad.addColorStop(0, 'rgba(232, 115, 42, 0.15)');
+    grad.addColorStop(1, 'rgba(232, 115, 42, 0)');
+
+    ctx.beginPath();
+    ctx.moveTo(toX(0), toY(data[0]));
+    for (let i = 1; i < data.length; i++) {
+        ctx.lineTo(toX(i), toY(data[i]));
+    }
+    ctx.lineTo(toX(data.length - 1), h - padBottom);
+    ctx.lineTo(toX(0), h - padBottom);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // Line
+    ctx.beginPath();
+    ctx.moveTo(toX(0), toY(data[0]));
+    for (let i = 1; i < data.length; i++) {
+        ctx.lineTo(toX(i), toY(data[i]));
+    }
+    ctx.strokeStyle = '#E8732A';
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.stroke();
+
+    // End dot
+    const lastX = toX(data.length - 1);
+    const lastY = toY(data[data.length - 1]);
+    ctx.beginPath();
+    ctx.arc(lastX, lastY, 4, 0, Math.PI * 2);
+    ctx.fillStyle = '#E8732A';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(lastX, lastY, 2, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+
+    // X-axis labels
+    const months = ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
+    ctx.fillStyle = '#8E8E93';
+    ctx.font = '11px Barlow, sans-serif';
+    ctx.textAlign = 'center';
+    months.forEach((m, i) => {
+        const x = padLeft + (i / (months.length - 1)) * chartW;
+        ctx.fillText(m, x, h - 8);
+    });
+}
