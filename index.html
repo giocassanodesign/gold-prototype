@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Investment Prototype</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="dev-panel">
+        <label><input type="checkbox" id="dev-force-failure"> Force Settlement Failure</label>
+        <button onclick="resetApp()">Restart Prototype</button>
+    </div>
+
+    <!-- Phone Simulator Container -->
+    <div id="phone-container">
+        <div id="status-bar">
+            <span>9:41</span>
+            <span>📶 🔋</span>
+        </div>
+
+        <!-- Screens -->
+        <main id="app-content">
+            <!-- Cash tab (home) -->
+            <section id="screen-cash" class="screen active">
+                <div class="cash-home">
+                    <p class="cash-label">Total cash</p>
+                    <p class="cash-total" id="cash-total-display">12,450.00 USDC</p>
+                    <div class="cash-actions">
+                        <button type="button" class="btn-primary" onclick="alert('Add money (prototype)')">Add money</button>
+                        <button type="button" class="btn-secondary" onclick="alert('Send (prototype)')">Send</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="screen-borrow" class="screen tab-stub">
+                <div class="tab-stub-inner">
+                    <h2>Borrow</h2>
+                    <p class="tab-stub-note">Coming soon</p>
+                </div>
+            </section>
+            <section id="screen-rewards" class="screen tab-stub">
+                <div class="tab-stub-inner">
+                    <h2>Rewards</h2>
+                    <p class="tab-stub-note">Coming soon</p>
+                </div>
+            </section>
+
+            <!-- Activities tab (order feed; former screen 6) -->
+            <section id="screen-activities" class="screen">
+                <header>
+                    <h2>Activities</h2>
+                </header>
+
+                <div class="activity-section" id="section-pending" style="display: none;">
+                    <h3>Pending Activities</h3>
+                    <div class="activity-feed" id="feed-pending"></div>
+                </div>
+
+                <div class="activity-section" id="section-completed">
+                    <h3>Completed Activities</h3>
+                    <div class="activity-feed" id="feed-completed">
+                        <div id="feed-completed-gold"></div>
+                        <div class="feed-item">
+                            <div class="feed-item-left">
+                                <div class="feed-icon">💵</div>
+                                <div class="feed-content">
+                                    <strong>Deposit</strong>
+                                    <span>1 week ago</span>
+                                </div>
+                            </div>
+                            <div class="feed-amount">+2,000.00 USDC</div>
+                        </div>
+                        <div class="feed-item">
+                            <div class="feed-item-left">
+                                <div class="feed-icon">📈</div>
+                                <div class="feed-content">
+                                    <strong>Sold Bitcoin</strong>
+                                    <span>2 weeks ago</span>
+                                </div>
+                            </div>
+                            <div class="feed-amount">+1,250.00 USDC</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screen 1: Investment List -->
+            <section id="screen-list" class="screen">
+                <header>
+                    <h2>Investments</h2>
+                </header>
+                <div class="card" onclick="navTo('screen-detail')">
+                    <div class="card-header">
+                        <h3>Gold</h3>
+                        <span class="badge l1-badge">~7 min settlement</span>
+                    </div>
+                    <div class="card-body">
+                        <p>Stable, inflation resistant.</p>
+                        <p class="price">$2,450.00 / oz</p>
+                    </div>
+                </div>
+                <div class="card disabled">
+                    <div class="card-header">
+                        <h3>Bitcoin</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="price">$65,000.00</p>
+                    </div>
+                </div>
+                <div class="card disabled">
+                    <div class="card-header">
+                        <h3>Ethereum</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="price">$3,400.00</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Screen 2: Gold Detail Screen -->
+            <section id="screen-detail" class="screen">
+                <header>
+                    <button class="back-btn" onclick="navTo('screen-list')">←</button>
+                    <h2>Gold (GLD)</h2>
+                </header>
+                <div class="hero-chart placeholder-chart">
+                    [Price Chart Placeholder]
+                </div>
+                <div class="info-row l1-info">
+                    <span class="icon">⏱</span>
+                    <div>
+                        <strong>Gold purchases take around 7 minutes to settle.</strong>
+                        <p>Market conditions may affect final price.</p>
+                    </div>
+                </div>
+                <div class="action-bar">
+                    <button class="btn-primary" onclick="navTo('screen-buy')">Buy Gold</button>
+                </div>
+            </section>
+
+            <!-- Screen 3: Buy Gold Amount -->
+            <section id="screen-buy" class="screen">
+                <header>
+                    <button class="back-btn" onclick="navTo('screen-detail')">←</button>
+                    <h2>Buy Gold</h2>
+                </header>
+                <div class="buy-container">
+                    <label>Amount (USDC)</label>
+                    <input type="number" id="buy-amount" placeholder="0.00" value="1000">
+                    <div class="price-note" style="margin-bottom: 10px;">
+                        <span class="icon">📈</span> Market price $2,450.00 / oz (est.)
+                    </div>
+                    <div class="price-note" style="justify-content: space-between;">
+                        <span>Service fee (1%)</span>
+                        <strong id="buy-fee-display">10.00 USDC</strong>
+                    </div>
+                </div>
+                <div class="action-bar">
+                    <button class="btn-primary" onclick="submitAmount()">Review Order</button>
+                </div>
+            </section>
+
+            <!-- Screen 4: Order Review -->
+            <section id="screen-review" class="screen">
+                <header>
+                    <button class="back-btn" onclick="navTo('screen-buy')">←</button>
+                    <h2>Review Order</h2>
+                </header>
+                <div class="summary-box" style="margin-bottom: 20px; text-align: center; padding: 20px 15px;">
+                    <p style="font-size: 0.9rem; color: #555; text-transform: uppercase;">You'll receive (est.)</p>
+                    <h2 id="review-gold-est" style="font-size: 2.2rem; margin: 5px 0;">0.408 oz Gold</h2>
+                    <div style="border-top: 1px dotted var(--black); margin-top: 15px; padding-top: 10px; font-size: 0.85rem; text-align: left;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <span style="color: #666;">Minimum received</span>
+                            <strong id="review-gold-min" style="color: #666;">0.404 oz Gold</strong>
+                        </div>
+                        <div style="color: #666; display: flex; gap: 8px; line-height: 1.3;">
+                            <span>ⓘ</span>
+                            <span>Final amount may vary due to market movement but won't fall below this.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="summary-box">
+                    <div class="summary-row">
+                        <span>Order amount</span>
+                        <strong id="review-amount">1,000.00 USDC</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Service fee</span>
+                        <strong id="review-fee">10.00 USDC</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>You are paying</span>
+                        <strong id="review-usdc">1,010.00 USDC</strong>
+                    </div>
+                </div>
+                <div class="info-box block-info">
+                    <p>⏱ Settlement · ~7 minutes</p>
+                </div>
+                <div class="action-bar">
+                    <button class="btn-primary" onclick="confirmOrder()">Confirm Purchase</button>
+                </div>
+            </section>
+
+            <!-- Screen 5: Order Confirmed Screen -->
+            <section id="screen-confirmed" class="screen flex-center text-center">
+                <button type="button" class="close-btn screen-close-corner" aria-label="Close" onclick="navToTab('cash')">×</button>
+                <div class="success-icon lg-icon">☑️</div>
+                <h2>You're in</h2>
+                <p class="desc">
+                    We're processing your gold purchase. You'll get a notification when it's ready — usually around 7
+                    minutes. You can close this screen.
+                </p>
+                <div class="action-col">
+                    <button class="btn-primary" onclick="navToTab('activities')">View Status</button>
+                </div>
+            </section>
+
+            <!-- Screen 7: Position Opened -->
+            <section id="screen-position" class="screen">
+                <header>
+                    <button class="back-btn" onclick="navTo('screen-list')">←</button>
+                    <h2>Gold Position</h2>
+                </header>
+
+                <div class="position-overview text-center">
+                    <p class="position-label">Total Balance</p>
+                    <h1 class="position-amount" id="pos-gold">0.408 oz</h1>
+                    <p class="position-value" id="pos-usdc">≈ 1,000.00 USDC</p>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-primary" onclick="navTo('screen-buy')">Buy More</button>
+                    <button class="btn-secondary" onclick="alert('Sell prototype not implemented')">Sell</button>
+                </div>
+            </section>
+        </main>
+
+        <nav id="bottom-nav" aria-label="Main">
+            <button type="button" class="nav-item active" data-tab="cash" onclick="navToTab('cash')">
+                <span class="nav-icon" aria-hidden="true">💵</span>
+                <span class="nav-label">Cash</span>
+            </button>
+            <button type="button" class="nav-item" data-tab="investments" onclick="navToTab('investments')">
+                <span class="nav-icon" aria-hidden="true">📈</span>
+                <span class="nav-label">Investments</span>
+            </button>
+            <button type="button" class="nav-item" data-tab="borrow" onclick="navToTab('borrow')">
+                <span class="nav-icon" aria-hidden="true">🏦</span>
+                <span class="nav-label">Borrow</span>
+            </button>
+            <button type="button" class="nav-item" data-tab="rewards" onclick="navToTab('rewards')">
+                <span class="nav-icon" aria-hidden="true">🎁</span>
+                <span class="nav-label">Rewards</span>
+            </button>
+            <button type="button" class="nav-item" data-tab="activities" onclick="navToTab('activities')">
+                <span class="nav-icon" aria-hidden="true">📋</span>
+                <span class="nav-label">Activities</span>
+            </button>
+        </nav>
+
+        <!-- Push Notifications Simulation -->
+        <div id="push-notification" class="hidden">
+            <div class="push-header">
+                <strong>Investment App</strong>
+                <span class="push-time">Now</span>
+            </div>
+            <div class="push-body" id="push-body">
+                <!-- content injected -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
