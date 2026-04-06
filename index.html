@@ -231,6 +231,45 @@
                 </div>
             </section>
 
+            <!-- Screen: Retry Order -->
+            <section id="screen-retry" class="screen">
+                <div class="screen-header">
+                    <button class="btn-icon" onclick="navToTab('cash')">×</button>
+                    <h2>Order Update</h2>
+                    <div class="header-spacer"></div>
+                </div>
+
+                <div class="alert-banner">
+                    <div class="alert-banner-icon">⚠️</div>
+                    <div>
+                        <strong>Your order didn't go through</strong>
+                        <p>Your <span id="retry-usdc-held">1,010.00</span> USDC is safe and ready to use.</p>
+                    </div>
+                </div>
+
+                <div class="quote-card">
+                    <p class="quote-card-label">New quote available</p>
+                    <div class="quote-card-row">
+                        <span>Updated price</span>
+                        <strong id="retry-new-price">$2,455.00 / oz</strong>
+                    </div>
+                    <div class="quote-card-divider"></div>
+                    <div class="quote-card-hero">
+                        <p class="quote-card-hero-label">You'll receive (est.)</p>
+                        <h2 id="retry-gold-est">0.406 oz Gold</h2>
+                    </div>
+                    <div class="quote-card-row">
+                        <span>Minimum received</span>
+                        <strong id="retry-gold-min">0.402 oz Gold</strong>
+                    </div>
+                </div>
+
+                <div class="action-bar">
+                    <button class="btn-primary" onclick="retryOrder()">Retry with new quote</button>
+                    <button class="btn-secondary" onclick="changeRetryAmount()">Change amount</button>
+                </div>
+            </section>
+
             <!-- Screen 7: Position Opened -->
             <section id="screen-position" class="screen">
                 <div class="screen-header">

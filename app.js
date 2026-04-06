@@ -10,7 +10,9 @@ const state = {
     /** @type {{ id: number, totalUsdc: number, goldAmount: number } | null} */
     pendingOrder: null,
     /** Most recent first — { id, totalUsdc, goldAmount, success, endedAt } */
-    completedGoldOrders: []
+    completedGoldOrders: [],
+    /** @type {{ totalUsdc: number, orderAmount: number, goldAmount: number } | null} */
+    failedOrder: null
 };
 
 const TAB_SCREENS = {
@@ -27,6 +29,7 @@ const INVESTMENT_SCREENS = new Set([
     'screen-buy',
     'screen-review',
     'screen-confirmed',
+    'screen-retry',
     'screen-position'
 ]);
 
@@ -70,7 +73,16 @@ function createGoldFeedRow(order, mode) {
     const row = document.createElement('div');
     row.className = 'feed-item';
     if (mode === 'pending') row.classList.add('pending');
-    if (mode === 'failed') row.classList.add('feed-error');
+    if (mode === 'failed') {
+        row.classList.add('feed-error');
+        if (state.failedOrder) {
+            row.style.cursor = 'pointer';
+            row.onclick = () => {
+                populateRetryScreen();
+                navTo('screen-retry');
+            };
+        }
+    }
 
     const left = document.createElement('div');
     left.className = 'feed-item-left';
@@ -90,7 +102,11 @@ function createGoldFeedRow(order, mode) {
     const content = document.createElement('div');
     content.className = 'feed-content';
     const strong = document.createElement('strong');
-    strong.textContent = 'Bought Gold';
+    if (mode === 'failed' && state.failedOrder) {
+        strong.textContent = 'Action needed';
+    } else {
+        strong.textContent = 'Bought Gold';
+    }
     const span = document.createElement('span');
     if (mode === 'pending') {
         span.textContent = 'Securing... usually ~7 min';
@@ -177,6 +193,8 @@ function confirmOrder() {
 function resetApp() {
     clearInterval(state.settlementInterval);
     state.isSettling = false;
+    state.failedOrder = null;
+    state.retryQuote = null;
     state.orderSeq = 0;
     state.pendingOrder = null;
     state.completedGoldOrders = [];
@@ -239,9 +257,77 @@ function handleSuccess() {
 
 function handleFailure() {
     state.isSettling = false;
-    showPush('Gold order didn\'t complete. Tap to retry.', () => {
-        navTo('screen-buy');
+
+    // Preserve the failed order details for retry
+    const orderAmount = state.usdcAmount / 1.01; // reverse out the fee
+    state.failedOrder = {
+        totalUsdc: state.usdcAmount,
+        orderAmount: orderAmount,
+        goldAmount: state.goldAmount
+    };
+
+    populateRetryScreen();
+
+    showPush('Your gold order needs attention. Tap to review.', () => {
+        navTo('screen-retry');
     });
+}
+
+function populateRetryScreen() {
+    const order = state.failedOrder;
+    if (!order) return;
+
+    // Simulate a new quote (price shifted slightly)
+    const priceShift = (Math.random() * 20 - 5).toFixed(2); // -5 to +15
+    const newPrice = state.pricePerOz + parseFloat(priceShift);
+    const newGoldEst = order.orderAmount / newPrice;
+    const newGoldMin = newGoldEst * 0.99;
+
+    // Store new quote on state for retry
+    state.retryQuote = {
+        newPrice: newPrice,
+        goldEst: newGoldEst,
+        goldMin: newGoldMin
+    };
+
+    document.getElementById('retry-usdc-held').textContent = order.totalUsdc.toFixed(2);
+    document.getElementById('retry-new-price').textContent = `$${newPrice.toFixed(2)} / oz`;
+    document.getElementById('retry-gold-est').textContent = `${newGoldEst.toFixed(3)} oz Gold`;
+    document.getElementById('retry-gold-min').textContent = `${newGoldMin.toFixed(3)} oz Gold`;
+}
+
+function retryOrder() {
+    if (!state.failedOrder || !state.retryQuote) return;
+
+    // Update state with new quote values
+    state.pricePerOz = state.retryQuote.newPrice;
+    state.usdcAmount = state.failedOrder.totalUsdc;
+    state.goldAmount = state.retryQuote.goldEst;
+    state.failedOrder = null;
+    state.retryQuote = null;
+
+    // Re-enter the confirm flow
+    const order = {
+        id: ++state.orderSeq,
+        totalUsdc: state.usdcAmount,
+        goldAmount: state.goldAmount
+    };
+    state.pendingOrder = order;
+    renderGoldActivityFeed();
+
+    navTo('screen-confirmed');
+    startSettlementSimulation();
+}
+
+function changeRetryAmount() {
+    if (!state.failedOrder) return;
+
+    // Pre-fill buy screen with the original amount
+    document.getElementById('buy-amount').value = Math.round(state.failedOrder.orderAmount);
+    state.failedOrder = null;
+    state.retryQuote = null;
+
+    navTo('screen-buy');
 }
 
 function showPush(message, onClick) {

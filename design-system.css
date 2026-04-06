@@ -571,6 +571,88 @@ textarea::placeholder {
 }
 
 /* ----------------------------------------------------------
+   21. ALERT / RETRY BANNER
+   ---------------------------------------------------------- */
+.alert-banner {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background: rgba(255, 59, 48, 0.06);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 59, 48, 0.15);
+    margin-bottom: var(--space-xl);
+}
+.alert-banner-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+    line-height: 1;
+}
+.alert-banner strong {
+    display: block;
+    font-size: var(--font-base);
+    font-weight: var(--fw-semibold);
+    margin-bottom: var(--space-xs);
+}
+.alert-banner p {
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+}
+
+/* ----------------------------------------------------------
+   22. QUOTE CARD
+   ---------------------------------------------------------- */
+.quote-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-card);
+    margin-bottom: var(--space-xl);
+}
+.quote-card-label {
+    font-size: var(--font-xs);
+    font-weight: var(--fw-semibold);
+    color: var(--color-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: var(--space-lg);
+}
+.quote-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-sm) 0;
+}
+.quote-card-row span {
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
+}
+.quote-card-row strong {
+    font-size: var(--font-sm);
+    font-weight: var(--fw-semibold);
+}
+.quote-card-divider {
+    height: 1px;
+    background: var(--color-border-light);
+    margin: var(--space-md) 0;
+}
+.quote-card-hero {
+    text-align: center;
+    padding: var(--space-lg) 0;
+}
+.quote-card-hero-label {
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-xs);
+}
+.quote-card-hero h2 {
+    font-size: var(--font-xl);
+    font-weight: var(--fw-bold);
+    letter-spacing: -0.02em;
+}
+
+/* ----------------------------------------------------------
    17. PHONE CONTAINER (prototype shell)
    ---------------------------------------------------------- */
 .phone-container {

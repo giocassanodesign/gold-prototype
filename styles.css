@@ -352,6 +352,10 @@ body {
     border-radius: var(--radius-md);
     margin-top: var(--space-sm);
     border-bottom: none;
+    transition: background 0.15s ease;
+}
+.feed-item.feed-error[style*="cursor: pointer"]:active {
+    background: rgba(255, 59, 48, 0.1);
 }
 
 /* --- Position screen --- */
